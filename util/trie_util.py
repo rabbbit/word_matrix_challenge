@@ -16,10 +16,7 @@ def get_trie(word_length, dicts):
         start = time.time()
 
         for word in dicts[word_length]:
-            try:
-                u_words.append(unicode(word))
-            except UnicodeDecodeError:
-                logging.warning('Failed to convert %s, skipping', word)
+            u_words.append(unicode(word))
 
         TRIES[word_length] = marisa_trie.Trie(u_words)
         logging.debug('Created new trie for length %d in %f',

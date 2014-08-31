@@ -63,15 +63,17 @@ class Rectangle(object):
 
 
 	def get_cols(self):
-		for index in range(self.word_length):
-			yield unicode(''.join(word[index] for word in self.curr_words))
+		for index in xrange(self.word_length):
+			yield u''.join(word[index] for word in self.curr_words)
+		#return [unicode(''.join(word[index] for word in self.curr_words)) 
+		#		for index in xrange(self.word_length)]
 
 
 	def get_total_length(self):
 		return len(self.get_string())
 
 	def get_string(self):
-		return ''.join(word for word in self.curr_words)
+		return u''.join(word for word in self.curr_words)
 
 	def __gt__(self, other):
 		return (self.get_total_length() > other.get_total_length()

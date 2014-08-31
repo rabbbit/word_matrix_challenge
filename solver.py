@@ -57,7 +57,10 @@ def get_dicts(iterable, sort):
     dicts = {}
 
     for word in (word.strip() for word in iterable):
-        dicts.setdefault(len(word), set()).add(word)
+        try:
+            dicts.setdefault(len(word), set()).add(unicode(word))
+        except UnicodeDecodeError:
+            logging.warning('Failed to convert %s, skipping', word)
 
     if dicts.get(0):
         del dicts[0]
