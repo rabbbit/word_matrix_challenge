@@ -17,9 +17,13 @@ def run():
     print "Initial length: %s" % len(words)
 
     words2 = []
-    for i in xrange(50):
+    for i in xrange(20):
         words2 = words2 + words
         print "Iteration %d, length %d, size: %s" % (i, len(words2), sys.getsizeof(words2))
+
+    print time.time()
+    words.sort()
+    print time.time()
 
 
     print "Loaded"
