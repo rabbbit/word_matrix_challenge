@@ -42,6 +42,9 @@ def get_dicts(iterable, sort):
     for word in (word.strip() for word in iterable):
         dicts.setdefault(len(word), set()).add(word)
 
+    if dicts.get(0):
+        del dicts[0]
+
     if sort:
         # OrderedSet will guarantee that the first found word is the biggest
         for length, words in dicts.iteritems():
@@ -70,11 +73,15 @@ def get_rectangle_sizes(word_lengths):
     #TODO fixme - test what happens to performance if I switch it 
     word_lengths = sorted(word_lengths, reverse=True)
 
-    return sorted(
+    sizes = sorted(
         combinations_with_replacement(word_lengths, 2),
         key = lambda x: x[0]*x[1],
         reverse = True,
     )
+
+    logging.debug('Sizes to check: %s', sizes)
+
+    return sizes
 
 def find_solution(size, dicts):
 
@@ -113,9 +120,19 @@ def do_work(dict_location, really_big):
 
     dicts = get_dicts_from_file(dict_location, really_big)
 
-    sizes = get_rectangle_sizes(dicts.keys(()))
+    sizes = get_rectangle_sizes(dicts.keys())
+
+    prev_time = start_time = time.time()
 
     for index, size in enumerate(sizes, 1):
+
+        time_now = time.time()
+
+        logging.debug('Checking size: %s (%d/%d) (prev step: %f, total: %f)',
+            size, index, len(sizes), time_now - prev_time, time_now - start_time,
+        )
+
+        prev_time = time_now
 
         answer = find_solution(size, dicts)
 
