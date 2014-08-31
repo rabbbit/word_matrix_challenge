@@ -10,11 +10,14 @@
                 a a
             "
         is valid
+
+    - marise_trie explodes on 500 000 000 keys.
 """
 
 import argparse
 import logging
 import time
+from itertools import combinations_with_replacement
 
 from util.ordered_set import OrderedSet
 
@@ -51,6 +54,21 @@ def get_dicts_from_file(dict_location, really_big):
         dicts = get_dicts(iterable=f, sort=really_big)
 
     return dicts
+
+def get_rectangle_sizes(word_lengths):
+    """
+        Return possible rectangle sizes, sorted- biggest firs
+    """
+
+    #go guarantee consistency in combinations = first elem >= second_elem
+    #TODO fixme - test what happens to performance if I switch it 
+    word_lengths = sorted(word_lengths, reverse=True)
+
+    return sorted(
+        combinations_with_replacement(word_lengths, 2),
+        key = lambda x: x[0]*x[1],
+        reverse = True,
+    )
 
 def do_work(dict_location, really_big):
 
