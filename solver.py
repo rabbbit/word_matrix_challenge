@@ -42,7 +42,7 @@ from itertools import combinations_with_replacement
 
 from util.ordered_set import OrderedSet
 from util.rectangle import Rectangle
-from util import trie_util
+from util.trie_util import get_trie, check_unused_tries
 
 
 def get_dicts(iterable, sort):
@@ -103,10 +103,10 @@ def get_rectangle_sizes(word_lengths):
 def find_solution(size, dicts):
 
     rectangle_width = size[0]
-    rectangle_height = size[0]
+    rectangle_height = size[1]
 
     words = dicts[rectangle_width]
-    trie = trie_util.get_trie(rectangle_width, dicts)
+    trie = get_trie(rectangle_width, dicts)
 
     r = Rectangle(rectangle_width, words)
 
@@ -116,10 +116,12 @@ def find_solution(size, dicts):
             
             if all(trie.has_keys_with_prefix(col) for col in r.get_cols()):
 
-                if rectangle_height == r.get_height():
+                if rectangle_height == r.curr_height:
+                    logging.info('Found a solution: %s - %s', size, r)
                     return r
                 else:
                     r.lower()
+
     except StopIteration:
         return None
 
@@ -172,7 +174,7 @@ def do_work(dict_location, really_big):
                 len(answers):
             break
 
-        trie_util.check_unused_tries(size)
+        check_unused_tries(size)
 
 
     print_answer(answers)

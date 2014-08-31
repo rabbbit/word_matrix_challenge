@@ -1,6 +1,6 @@
-from functools import total_ordering
+#from functools import total_ordering
 
-@total_ordering
+#@total_ordering
 class Rectangle(object):
 	"""
 		Util class to represent a rectangle of given sizes
@@ -10,12 +10,16 @@ class Rectangle(object):
 			- columns for current rectangle
 	"""
 
+	__slots__ = ['word_length', 'all_words', 'curr_words', 'curr_height',
+		'iterators'
+	]
+
 	def __init__(self, word_length, words):
 		self.word_length = word_length
 		self.all_words = words
 
 		self.curr_words = []
-		self.curr_height = 0
+		self.curr_height = 1
 
 		self.iterators = {}
 
@@ -43,7 +47,7 @@ class Rectangle(object):
 			return next_elem
 		except StopIteration:
 
-			if self.curr_height == 0:
+			if self.curr_height == 1:
 				raise
 
 			self.curr_height -= 1
@@ -62,8 +66,6 @@ class Rectangle(object):
 		for index in range(self.word_length):
 			yield unicode(''.join(word[index] for word in self.curr_words))
 
-	def get_height(self):
-		return len(self.curr_words)
 
 	def get_total_length(self):
 		return len(self.get_string())
