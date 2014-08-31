@@ -1,6 +1,8 @@
 import unittest
 import solver
 
+from util.rectangle import Rectangle
+
 class TestDictParsing(unittest.TestCase):
 
 	def test_empty(self):
@@ -72,6 +74,104 @@ class TestRectangleSizes(unittest.TestCase):
 				solver.get_rectangle_sizes(word_lengths),
 				sizes,
 			)
+
+class TestRectangleObject(unittest.TestCase):
+
+	def test_empty(self):
+
+		r = Rectangle(1, [])
+
+		with self.assertRaises(StopIteration):
+			r.get_next()
+
+	def test_one_level(self):
+
+		r = Rectangle(1, ['1', '2', '3'])
+
+		self.assertEquals(
+			r.get_next(),
+			'1',
+		)
+
+		self.assertEquals(
+			r.get_next(),
+			'2',
+		)
+
+		self.assertEquals(
+			r.get_next(),
+			'3',
+		)
+
+		with self.assertRaises(StopIteration):
+			r.get_next()
+
+
+	def test_more_levels(self):
+
+		r = Rectangle(1, ['1', '2', '3'])
+
+		self.assertEquals(
+			r.get_next(),
+			'1',
+		)
+
+		self.assertEquals(
+			r.get_lower(),
+			'1',
+		)
+
+		self.assertEquals(
+			r.get_lower(),
+			'1',
+		)
+
+		for item in ['2', '3', '2', '3', '2', '3']:
+			self.assertEquals(
+				r.get_next(),
+				item,
+			)
+
+		with self.assertRaises(StopIteration):
+			r.get_next()
+
+
+
+	def test_columns_one_level(self):
+		
+		r = Rectangle(3, ['123'])
+		
+		self.assertEquals(
+			r.get_next(),
+			'123',
+		)
+
+		self.assertEquals(
+			list(r.get_columns()),
+			['1', '2', '3'],
+		)
+
+	def test_columns_more_levels(self):
+
+		r = Rectangle(3, ['123', '456', '789'])
+
+		r.get_next()
+		r.get_lower()
+		r.get_lower()
+
+		self.assertEquals(
+			list(r.get_columns()),
+			['111', '222', '333'],
+		)
+
+		r.get_next()
+
+		self.assertEquals(
+			list(r.get_columns()),
+			['114', '225', '336'],
+		)
+
+
 
 		
 
