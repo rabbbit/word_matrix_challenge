@@ -1,6 +1,23 @@
 """
     BigWords problem as per documents in "docs".
 
+    Comments:
+    - it's slow, but I am not going to multiprocess, sorry :]
+    - I am using marisa_trie:
+        - I know it exploded for 500k keys per Trie - I ignored it for now
+            (I createa a trie per word length)
+        - Installation
+            - checked on Docker
+            - rpm -ivh http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+            - yum install gcc
+            - yum install gcc-c++
+            - yum install python-pip
+            - yum install python-devel
+            - pip install marisa_trie
+    - also:
+        yum install argparse
+        - 
+
     Assumptions:
     - Aaa != aaa
     - given dictionary "aa" -> answer
