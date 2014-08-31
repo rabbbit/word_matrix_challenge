@@ -11,7 +11,11 @@
             "
         is valid
 
-    - marise_trie explodes on 500 000 000 keys.
+    - marise_trie explodes on 500 000 000 keys - I am going to ignore it,
+        if the data is bigger it should be relatively easy to split it.
+    - text said asci characters, but there were some non-asci ones in the file
+        I'm simply ignoring those words
+    - I'm not going to do multiprocess things, sorry :]
 """
 
 import argparse
@@ -20,6 +24,8 @@ import time
 from itertools import combinations_with_replacement
 
 from util.ordered_set import OrderedSet
+from util.rectangle import Rectangle
+from util import trie_util
 
 
 def get_dicts(iterable, sort):
@@ -70,14 +76,72 @@ def get_rectangle_sizes(word_lengths):
         reverse = True,
     )
 
+def find_solution(size, dicts):
+
+    rectangle_width = size[0]
+    rectangle_height = size[0]
+
+    words = dicts[rectangle_width]
+    trie = trie_util.get_trie(rectangle_width, dicts)
+
+    r = Rectangle(rectangle_width, words)
+
+    try:
+        while True:
+            r.get_next()
+            
+            if all(trie.has_keys_with_prefix(col) for col in r.get_cols()):
+
+                if rectangle_height == r.get_height():
+                    return r
+                else:
+                    r.lower()
+    except StopIteration:
+        return None
+
+    raise Exception('This should not happend')
+
+
+def print_answer(answers):
+    pass
+
 def do_work(dict_location, really_big):
 
     logging.info('Starting work with dict: %s, really_big=%s', dict_location, really_big)
 
-    dicts = get_dicts_from_file(dict_location, really_big)
-    time.sleep(100)
+    answers = []
 
-    #print dicts
+    dicts = get_dicts_from_file(dict_location, really_big)
+
+    sizes = get_rectangle_sizes(dicts.keys(()))
+
+    for index, size in enumerate(sizes, 1):
+
+        answer = find_solution(size, dicts)
+
+        if answer is not None:
+            answers.append(answer)
+
+        # even if we find an answer, we might have to go to the next step
+        if answer is not None and (
+                not really_big or \
+                index == len(sizes) or \
+                size[0]*size[1] > sizes[index][0]*sizes[index][1]
+            ):
+            break
+        
+        # if no answer in this iteration, but we have previous ones
+        # and we're moving to smaller size, exit
+        if answer is None and \
+                index == len(sizes) or \
+                size[0]*size[1] > sizes[index][0]*sizes[index][1] and \
+                len(answers):
+            break
+
+        trie_util.check_unused_tries(size)
+
+
+    print_answer(answers)
 
 def run():
 

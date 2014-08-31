@@ -2,6 +2,7 @@ import unittest
 import solver
 
 from util.rectangle import Rectangle
+from util.ordered_set import OrderedSet
 
 class TestDictParsing(unittest.TestCase):
 
@@ -116,13 +117,15 @@ class TestRectangleObject(unittest.TestCase):
 			'1',
 		)
 
+		r.lower()
 		self.assertEquals(
-			r.get_lower(),
+			r.get_next(),
 			'1',
 		)
 
+		r.lower()
 		self.assertEquals(
-			r.get_lower(),
+			r.get_next(),
 			'1',
 		)
 
@@ -147,8 +150,8 @@ class TestRectangleObject(unittest.TestCase):
 		)
 
 		self.assertEquals(
-			list(r.get_columns()),
-			['1', '2', '3'],
+			list(r.get_cols()),
+			[u'1', u'2', '3'],
 		)
 
 	def test_columns_more_levels(self):
@@ -156,21 +159,76 @@ class TestRectangleObject(unittest.TestCase):
 		r = Rectangle(3, ['123', '456', '789'])
 
 		r.get_next()
-		r.get_lower()
-		r.get_lower()
+		r.lower()
+		r.get_next()
+		r.lower()
+		r.get_next()
 
 		self.assertEquals(
-			list(r.get_columns()),
-			['111', '222', '333'],
+			list(r.get_cols()),
+			[u'111', u'222', u'333'],
 		)
 
 		r.get_next()
 
 		self.assertEquals(
-			list(r.get_columns()),
-			['114', '225', '336'],
+			list(r.get_cols()),
+			[u'114', u'225', u'336'],
 		)
 
+	def test_comparison_simple(self):
+
+		r0 = Rectangle(1, ['1', '2', '3'])
+		r1 = Rectangle(3, ['111', '222', '333'])
+		r2 = Rectangle(3, ['111', '999', '999'])
+		r3 = Rectangle(3, ['112', '111', '111'])
+
+		for r in (r1, r2, r3):
+			r.get_next()
+			r.lower()
+			r.get_next()
+			r.lower()
+			r.get_next()
+			r.lower()
+
+		self.assertGreater(r1, r0)
+		self.assertEquals(r1, r2)
+		self.assertGreater(r3, r2)
+
+class TestIndividualSolutions(unittest.TestCase):
+
+	def test_simple(self):
+
+		size = (1,1)
+		dicts = {1 : set('1')}
+
+		r = solver.find_solution(size, dicts)
+
+		self.assertIsNotNone(r)
+
+	def test_example_from_doc(self):
+
+		size = (2,2)
+		dicts = {2 : set(['am', 'ma', 'pa'])}
+
+		r = solver.find_solution(size, dicts)
+
+		self.assertIsNotNone(r)
+
+
+	def test_example_from_doc_sorted(self):
+
+		size = (2,2)
+		dicts = {2 : OrderedSet(['pa', 'am', 'zz', 'ma'])}
+
+		r = solver.find_solution(size, dicts)
+
+		self.assertIsNotNone(r)
+
+		self.assertEquals(
+			'paam',
+			r.get_string(),
+		)
 
 
 		

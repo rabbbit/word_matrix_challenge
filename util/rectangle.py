@@ -1,6 +1,10 @@
+from functools import total_ordering
+
+@total_ordering
 class Rectangle(object):
 	"""
-		Dumb object to iterate over rectangle of given length.
+		Util class to represent a rectangle of given sizes
+		Useful for iterating,
 		Given a list of words can return:
 			- next word for this or lower level.
 			- columns for current rectangle
@@ -45,15 +49,39 @@ class Rectangle(object):
 			self.curr_height -= 1
 			return self.get_next()
 
-	def get_lower(self):
+	def lower(self):
 		"""
 			Adds another layer to the rectangle.
 			Initializes new iterator for that level
 		"""
 		self.curr_height += 1
-		return self.get_next()
+		self.iterators[self.curr_height] = None
 
 
-	def get_columns(self):
+	def get_cols(self):
 		for index in range(self.word_length):
-			yield ''.join(word[index] for word in self.curr_words)
+			yield unicode(''.join(word[index] for word in self.curr_words))
+
+	def get_height(self):
+		return len(self.curr_words)
+
+	def get_total_length(self):
+		return len(self.get_string())
+
+	def get_string(self):
+		return ''.join(word for word in self.curr_words)
+
+	def __gt__(self, other):
+		return (self.get_total_length() > other.get_total_length()
+			or (self.get_total_length() == other.get_total_length() and
+				self.get_string() > other.get_string()
+			)
+		)
+
+	def __eq__(self, other):
+		return (self.get_total_length() == other.get_total_length() and
+				self.get_string() == other.get_string()
+		)
+
+	def __repr__(self):
+		return self.get_string()
