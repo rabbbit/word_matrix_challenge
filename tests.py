@@ -195,6 +195,11 @@ class TestRectangleObject(unittest.TestCase):
 		self.assertEquals(r1, r2)
 		self.assertGreater(r3, r2)
 
+		self.assertEquals(
+			r3,
+			max((r0, r1, r2, r3)),
+		)
+
 class TestIndividualSolutions(unittest.TestCase):
 
 	def test_simple(self):
@@ -230,6 +235,38 @@ class TestIndividualSolutions(unittest.TestCase):
 			r.get_string(),
 		)
 
+class TestPrintingResults(unittest.TestCase):
+
+	def test_one(self):
+
+		r = Rectangle(1, ['a'])
+		r.get_next()
+
+		final = r.get_final_string()
+
+		self.assertEquals(
+			final,
+			"1x1\na"
+		)
+
+	def test_two(self):
+		"""
+			Just to make sure that if I actually find something,
+			it will be printed out
+		"""
+
+		r = Rectangle(4, ['abcd', 'bafg'])
+		r.get_next()
+		r.lower()
+		r.get_next()
+		r.get_next()
+
+		final = r.get_final_string()
+
+		self.assertEquals(
+			final,
+			"4x2\na b c d\nb a f g"
+		)
 
 		
 

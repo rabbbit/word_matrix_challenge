@@ -131,8 +131,13 @@ def find_solution(size, dicts):
     raise Exception('This should not happend')
 
 
-def print_answer(answers):
-    pass
+def print_answer(answers, start_time):
+
+    logging.info('Found answer in %f', time.time() - start_time)
+    best = max(answers)
+
+    best.print_final()
+
 
 def do_work(dict_location, really_big):
 
@@ -179,8 +184,7 @@ def do_work(dict_location, really_big):
 
         check_unused_tries(size)
 
-
-    print_answer(answers)
+    print_answer(answers, start_time)
 
 def run():
 

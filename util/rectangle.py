@@ -65,9 +65,6 @@ class Rectangle(object):
 	def get_cols(self):
 		for index in xrange(self.word_length):
 			yield u''.join(word[index] for word in self.curr_words)
-		#return [unicode(''.join(word[index] for word in self.curr_words)) 
-		#		for index in xrange(self.word_length)]
-
 
 	def get_total_length(self):
 		return len(self.get_string())
@@ -89,3 +86,19 @@ class Rectangle(object):
 
 	def __repr__(self):
 		return self.get_string()
+
+	def print_final(self):
+		print self.get_final_string()
+
+	def get_final_string(self):
+		first = "%sx%s\n%s"
+
+		second = first % (
+			self.word_length,
+			len(self.curr_words),
+			(" ".join("%s" for _ in xrange(self.word_length)) + "\n")*len(self.curr_words)
+		)
+
+		third = second % tuple(letter for word in self.curr_words for letter in word)
+
+		return third.strip()
