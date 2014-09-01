@@ -2,21 +2,8 @@
     BigWords problem as per documents in "docs".
 
     Comments:
-    - it's slow, but I am not going to multiprocess, sorry :]
-    - I am using marisa_trie:
-        - I know it exploded for 500k keys per Trie - I ignored it for now
-            (I createa a trie per word length)
-        - Installation
-            - checked on Docker
-            - rpm -ivh http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
-            - yum install gcc
-            - yum install gcc-c++
-            - yum install python-pip
-            - yum install python-devel
-            - pip install marisa_trie
-    - also:
-        yum install argparse
-        - 
+    - it's slow = for full dictionary it takes hours. Only ~50 seconds for 100k
+        long one though.
 
     Assumptions:
     - Aaa != aaa
@@ -27,20 +14,18 @@
                 a a
             "
         is valid
+    - ignore words with non-ascii characters
+    - marisa_trie might explode on 500m keys - maximum trie I need
+        currently has 50k elements.
 
-    - marise_trie explodes on 500 000 000 keys - I am going to ignore it,
-        if the data is bigger it should be relatively easy to split it.
-    - text said asci characters, but there were some non-asci ones in the file
-        I'm simply ignoring those words
-    - I'm not going to do multiprocess things, sorry :]
 """
 
 import argparse
 import logging
 import time
 
-from itertools import combinations_with_replacement
-#from util.itertools27 import combinations_with_replacement
+#from itertools import combinations_with_replacement
+from util.itertools27 import combinations_with_replacement
 from util.ordered_set import OrderedSet
 from util.rectangle import Rectangle
 from util.trie_util import get_trie, check_unused_tries
