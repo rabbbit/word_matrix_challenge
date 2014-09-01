@@ -11,14 +11,9 @@ def get_trie(word_length, dicts):
      
     if word_length not in TRIES:
 
-        u_words = []
-
         start = time.time()
 
-        for word in dicts[word_length]:
-            u_words.append(unicode(word))
-
-        TRIES[word_length] = marisa_trie.Trie(u_words)
+        TRIES[word_length] = marisa_trie.Trie(dicts[word_length])
         logging.debug('Created new trie for length %d in %f',
 			word_length,
 			time.time() - start
