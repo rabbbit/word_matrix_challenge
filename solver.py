@@ -91,15 +91,13 @@ def get_rectangle_sizes(word_lengths):
 
     #go guarantee consistency in combinations = first elem >= second_elem
     #TODO fixme - test what happens to performance if I switch it 
-    word_lengths = sorted(word_lengths, reverse=True)
+    word_lengths = sorted(word_lengths, reverse=False)
 
     sizes = sorted(
         combinations_with_replacement(word_lengths, 2),
         key = lambda x: x[0]*x[1],
         reverse = True,
     )
-
-    logging.debug('Sizes to check: %s', sizes)
 
     return sizes
 
@@ -139,15 +137,25 @@ def print_answer(answers, start_time):
     best.print_final()
 
 
-def do_work(dict_location, really_big):
-
+def do_work_from_file(dict_location, really_big):
     logging.info('Starting work with dict: %s, really_big=%s', dict_location, really_big)
-
-    answers = []
 
     dicts = get_dicts_from_file(dict_location, really_big)
 
+    do_work(dicts, really_big)
+
+def do_work_from_iterable(iterable, really_big):
+
+    dicts = get_dicts(iterable, really_big)
+
+    do_work(dicts, really_big)
+
+def do_work(dicts, really_big):
+
+    answers = []
+
     sizes = get_rectangle_sizes(dicts.keys())
+    logging.debug('Sizes to check: %s', sizes)
 
     prev_time = start_time = time.time()
 
@@ -210,7 +218,7 @@ def run():
     if args.debug:
         logging.basicConfig(level='DEBUG', format='%(asctime)s %(levelname)8s %(message)s')
     
-    do_work(dict_location=args.file, really_big=args.really_big)
+    do_work_from_file(dict_location=args.file, really_big=args.really_big)
 
 if __name__ == '__main__':
     run()
