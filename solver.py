@@ -141,7 +141,7 @@ def do_multi_work_from_file(dict_location, really_big):
 
     from multiprocessing import Process, Pipe
 
-    no_children = 4
+    no_children = 10
     parent_connections = []
 
     for no in xrange(no_children):
@@ -154,9 +154,11 @@ def do_multi_work_from_file(dict_location, really_big):
                 child_conn,
             )
         )
-        parent_connections.append(parent_conn)
+        parent_connections.append((p, parent_conn))
         p.start()
-        #p.join()
+
+    for p, parent_conn in parent_connections:
+        p.join()
 
 
 def do_work_from_file(dict_location, really_big, no, no_children, conn):
