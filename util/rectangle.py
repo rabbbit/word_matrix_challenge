@@ -14,9 +14,11 @@ class Rectangle(object):
 		'iterators'
 	]
 
-	def __init__(self, word_length, words):
+	def __init__(self, word_length, words, no, no_children):
 		self.word_length = word_length
-		self.all_words = words
+
+		my_share = len(words)/no_children
+		self.all_words = words[no*my_share:(no+1)*my_share]
 
 		self.curr_words = []
 		self.curr_height = 1

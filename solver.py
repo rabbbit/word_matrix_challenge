@@ -40,7 +40,7 @@ import logging
 import time
 from itertools import combinations_with_replacement
 
-from util.ordered_set import OrderedSet
+#from util.ordered_set import OrderedSet
 from util.rectangle import Rectangle
 from util.trie_util import get_trie, check_unused_tries
 
@@ -68,7 +68,7 @@ def get_dicts(iterable, sort):
     if sort:
         # OrderedSet will guarantee that the first found word is the biggest
         for length, words in dicts.iteritems():
-            dicts[length] = OrderedSet(sorted(words, reverse=True))
+            dicts[length] = list(sorted(words, reverse=True))
 
     logging.info('Successfully created dicts in %f', time.time() - start)
     logging.debug('Dict stats: len vs no_occurentes' + ''.join(
@@ -90,8 +90,7 @@ def get_rectangle_sizes(word_lengths):
     """
 
     #go guarantee consistency in combinations = first elem >= second_elem
-    #TODO fixme - test what happens to performance if I switch it 
-    word_lengths = sorted(word_lengths, reverse=False)
+    word_lengths = sorted(word_lengths, reverse=True)
 
     sizes = sorted(
         combinations_with_replacement(word_lengths, 2),
@@ -101,7 +100,7 @@ def get_rectangle_sizes(word_lengths):
 
     return sizes
 
-def find_solution(size, dicts):
+def find_solution(size, dicts, no, no_children):
 
     rectangle_width = size[0]
     rectangle_height = size[1]
@@ -109,7 +108,7 @@ def find_solution(size, dicts):
     words = dicts[rectangle_width]
     trie = get_trie(rectangle_width, dicts)
 
-    r = Rectangle(rectangle_width, words)
+    r = Rectangle(rectangle_width, words, no, no_children)
 
     try:
         while True:
@@ -131,18 +130,42 @@ def find_solution(size, dicts):
 
 def print_answer(answers, start_time):
 
-    logging.info('Found answer in %f', time.time() - start_time)
-    best = max(answers)
+    if len(answers):
+        logging.info('Found answer in %f', time.time() - start_time)
+        best = max(answers)
+        best.print_final()
+    else:
+        logging.info('No answers')
 
-    best.print_final()
+def do_multi_work_from_file(dict_location, really_big):
+
+    from multiprocessing import Process, Pipe
+
+    no_children = 4
+    parent_connections = []
+
+    for no in xrange(no_children):
+        parent_conn, child_conn = Pipe()
+        p = Process(target=do_work_from_file, args=(
+                dict_location,
+                really_big,
+                no,
+                no_children,
+                child_conn,
+            )
+        )
+        parent_connections.append(parent_conn)
+        p.start()
+        #p.join()
 
 
-def do_work_from_file(dict_location, really_big):
+def do_work_from_file(dict_location, really_big, no, no_children, conn):
+
     logging.info('Starting work with dict: %s, really_big=%s', dict_location, really_big)
 
     dicts = get_dicts_from_file(dict_location, really_big)
 
-    do_work(dicts, really_big)
+    do_work(dicts, really_big, no, no_children, conn)
 
 def do_work_from_iterable(iterable, really_big):
 
@@ -150,7 +173,7 @@ def do_work_from_iterable(iterable, really_big):
 
     do_work(dicts, really_big)
 
-def do_work(dicts, really_big):
+def do_work(dicts, really_big, no, no_children, conn):
 
     answers = []
 
@@ -169,7 +192,7 @@ def do_work(dicts, really_big):
 
         prev_time = time_now
 
-        answer = find_solution(size, dicts)
+        answer = find_solution(size, dicts, no, no_children)
 
         if answer is not None:
             answers.append(answer)
@@ -218,7 +241,7 @@ def run():
     if args.debug:
         logging.basicConfig(level='DEBUG', format='%(asctime)s %(levelname)8s %(message)s')
     
-    do_work_from_file(dict_location=args.file, really_big=args.really_big)
+    do_multi_work_from_file(dict_location=args.file, really_big=args.really_big)
 
 if __name__ == '__main__':
     run()
