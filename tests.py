@@ -2,7 +2,6 @@ import unittest
 import solver
 
 from util.rectangle import Rectangle
-from util.ordered_set import OrderedSet
 
 class TestDictParsing(unittest.TestCase):
 
@@ -21,7 +20,7 @@ class TestDictParsing(unittest.TestCase):
 		to_test = (
 			(
 				('a', 'aaa', 'aaaaa'),
-				{1 : set(['a']), 3: set(['aaa']), 5: set(['aaaaa'])}
+				{1 : ['a'], 3:['aaa'], 5: ['aaaaa']}
 			),
 		)
 
@@ -205,7 +204,7 @@ class TestIndividualSolutions(unittest.TestCase):
 	def test_simple(self):
 
 		size = (1,1)
-		dicts = {1 : set('1')}
+		dicts = {1 : list('1')}
 
 		r = solver.find_solution_for_size(size, dicts)
 
@@ -214,7 +213,7 @@ class TestIndividualSolutions(unittest.TestCase):
 	def test_example_from_doc(self):
 
 		size = (2,2)
-		dicts = {2 : set(['am', 'ma', 'pa'])}
+		dicts = {2 : list(['am', 'ma', 'pa'])}
 
 		r = solver.find_solution_for_size(size, dicts)
 
@@ -224,7 +223,7 @@ class TestIndividualSolutions(unittest.TestCase):
 	def test_example_from_doc_sorted(self):
 
 		size = (2,2)
-		dicts = {2 : OrderedSet(['pa', 'am', 'zz', 'ma'])}
+		dicts = {2 : list(['pa', 'am', 'zz', 'ma'])}
 
 		r = solver.find_solution_for_size(size, dicts)
 

@@ -26,14 +26,13 @@ import time
 
 #from itertools import combinations_with_replacement
 from util.itertools27 import combinations_with_replacement
-from util.ordered_set import OrderedSet
 from util.rectangle import Rectangle
 from util.trie_util import get_trie, check_unused_tries
 
 
 def get_dicts(iterable, sort):
     """
-        Turns iterable into a dict of sets of all available words,
+        Turns iterable into a dict of lists of all available words,
         keyed by word_length.
         :param iterable: iterable to find words in
         :param sort: does data have to be sorted,
@@ -46,7 +45,7 @@ def get_dicts(iterable, sort):
 
     for word in (word.strip() for word in iterable):
         try:
-            dicts.setdefault(len(word), set()).add(unicode(word))
+            dicts.setdefault(len(word), list()).append(unicode(word))
         except UnicodeDecodeError:
             logging.warning('Failed to convert %s, skipping', word)
 
@@ -54,9 +53,9 @@ def get_dicts(iterable, sort):
         del dicts[0]
 
     if sort:
-        # OrderedSet will guarantee that the first found word is the biggest
-        for length, words in dicts.iteritems():
-            dicts[length] = OrderedSet(sorted(words, reverse=True))
+        # sorted order will guarantee that the first found word is the biggest
+        for words in dicts.itervalues():
+            words.sort(reverse=True)
 
     logging.info('Successfully created dicts in %f', time.time() - start)
     logging.debug('Dict stats: len vs no_occurentes' + ''.join(
@@ -96,7 +95,7 @@ def find_solution_for_size(size, dicts):
     """
         Finds a solution for a given size
         :param size: a tuple of required size
-        :param dicts: dictionary of sets of all available words, per word_length
+        :param dicts: dictionary of lists of all available words, per word_length
         :returns: a solution (Rectangle object) or None
     """
 
@@ -168,7 +167,7 @@ def do_work_from_iterable(iterable, really_big):
 def do_work(dicts, really_big):
     """
         Where magic happens
-        :param dicts: dictionary of sets of words, keyed by word_length
+        :param dicts: dictionary of lists of words, keyed by word_length
         :param really_big: true/false flag
     """
 
