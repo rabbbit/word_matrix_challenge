@@ -38,8 +38,9 @@
 import argparse
 import logging
 import time
-from itertools import combinations_with_replacement
 
+from itertools import combinations_with_replacement
+#from util.itertools27 import combinations_with_replacement
 from util.ordered_set import OrderedSet
 from util.rectangle import Rectangle
 from util.trie_util import get_trie, check_unused_tries
