@@ -207,7 +207,7 @@ class TestIndividualSolutions(unittest.TestCase):
 		size = (1,1)
 		dicts = {1 : set('1')}
 
-		r = solver.find_solution(size, dicts)
+		r = solver.find_solution_for_size(size, dicts)
 
 		self.assertIsNotNone(r)
 
@@ -216,7 +216,7 @@ class TestIndividualSolutions(unittest.TestCase):
 		size = (2,2)
 		dicts = {2 : set(['am', 'ma', 'pa'])}
 
-		r = solver.find_solution(size, dicts)
+		r = solver.find_solution_for_size(size, dicts)
 
 		self.assertIsNotNone(r)
 
@@ -226,7 +226,7 @@ class TestIndividualSolutions(unittest.TestCase):
 		size = (2,2)
 		dicts = {2 : OrderedSet(['pa', 'am', 'zz', 'ma'])}
 
-		r = solver.find_solution(size, dicts)
+		r = solver.find_solution_for_size(size, dicts)
 
 		self.assertIsNotNone(r)
 

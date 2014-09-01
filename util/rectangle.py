@@ -29,7 +29,7 @@ class Rectangle(object):
 			Move level up if level is exhausted.
 			Try to return next element on that level.
 			Move level up ..
-			Raises StopIteration if all iterators are exhausted
+			Raises StopIteration if all iterators/levels are exhausted
 		"""
 		
 		iterator = self.iterators.get(self.curr_height)
@@ -56,17 +56,23 @@ class Rectangle(object):
 	def lower(self):
 		"""
 			Adds another layer to the rectangle.
-			Initializes new iterator for that level
 		"""
 		self.curr_height += 1
 		self.iterators[self.curr_height] = None
 
 
 	def get_cols(self):
+		"""
+			Returns iterator over all columns in a rectangle
+		"""
 		for index in xrange(self.word_length):
 			yield u''.join(word[index] for word in self.curr_words)
 
 	def get_total_length(self):
+		"""
+			Length of all words in a rectangle, contatenated
+			Used for sorting
+		"""
 		return len(self.get_string())
 
 	def get_string(self):
