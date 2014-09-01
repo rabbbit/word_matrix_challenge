@@ -90,8 +90,7 @@ def get_rectangle_sizes(word_lengths):
     """
 
     #go guarantee consistency in combinations = first elem >= second_elem
-    #TODO fixme - test what happens to performance if I switch it 
-    word_lengths = sorted(word_lengths, reverse=False)
+    word_lengths = sorted(word_lengths, reverse=True)
 
     sizes = sorted(
         combinations_with_replacement(word_lengths, 2),
