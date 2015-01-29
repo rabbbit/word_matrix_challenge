@@ -4,7 +4,9 @@
 	
 Interview task for Sanoma
 
-## Full summary ##
+## For full problem specification, **look into /doc folder** ##
+
+## Full summary, copied from the above ##
 
  A Big Word consists of a matrix filled with ASCII characters such that when
  we read each row we find a complete word which exists in the dictionary and
@@ -16,7 +18,7 @@ Interview task for Sanoma
 
 ## Algorithm description ##
 
-Algorithm takes three parameters:
+Application takes three parameters:
 
 1. **file** => file containing dictionary to be used
 2. **really**_big option => see above
@@ -59,7 +61,7 @@ This might mean having more than 1 result -> we pick the biggest and display it 
 	- OrderedSet is not necessary at all, we could have a simple list since we're only using it for iterating
 	- OrderedSet/list might not be necessary - we could iterate over keys from the trie. Have to check ordering/performance
 
-### How do I get set up? ###
+### How do I get set up? Following requirement of CentOS, etc ###
 
 * Configuration
 	- ./solver --file quarter_wordlist --really-big --debug
@@ -82,14 +84,3 @@ Python 2.6 is required.
 * How to run tests
 	- nosetest
 	- python tests.py
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
