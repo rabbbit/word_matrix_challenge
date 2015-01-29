@@ -4,9 +4,9 @@
 	
 Interview task for Sanoma
 
-## For full problem specification, **look into /doc folder** ##
+## Full summary ##
 
-## Full summary, copied from the above ##
+[For full problem specification](doc/BigWords.pdf)
 
  A Big Word consists of a matrix filled with ASCII characters such that when
  we read each row we find a complete word which exists in the dictionary and
